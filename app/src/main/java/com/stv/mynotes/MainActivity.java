@@ -50,9 +50,10 @@ implements LoaderManager.LoaderCallbacks<Cursor>
 
     }
 
-    private void insertNote(String noteText) {
+    private void insertNote(String noteText, String noteTitle) {
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.NOTE_TEXT, noteText);
+        values.put(DBOpenHelper.NOTE_TITLE, noteTitle);
         Uri noteUri = getContentResolver().insert(NotesProvider.CONTENT_URI,
                 values);
     }
@@ -109,9 +110,9 @@ implements LoaderManager.LoaderCallbacks<Cursor>
     }
 
     private void insertSampleData() {
-        insertNote("Simple note");
-        insertNote("Multi-line\nnote");
-        insertNote("Very long note with a lot of text that exceeds the width of the screen");
+        insertNote("Simple note", "Title1");
+        insertNote("Multi-line\nnote", "Title2");
+        insertNote("Very long note with a lot of text that exceeds the width of the screen", "Title3");
         restartLoader();
     }
 

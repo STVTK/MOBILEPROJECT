@@ -15,6 +15,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     public static final String NOTE_ID = "_id";
     public static final String NOTE_TEXT = "noteText";
     public static final String NOTE_CREATED = "noteCreated";
+    public static final String NOTE_TITLE  = "noteTitle";
 
     public static final String[] ALL_COLUMNS =
             {NOTE_ID, NOTE_TEXT, NOTE_CREATED};
@@ -23,6 +24,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     private static final String TABLE_CREATE =
             "CREATE TABLE " + TABLE_NOTES + " (" +
                     NOTE_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    NOTE_TITLE + " TEXT, " +
                     NOTE_TEXT + " TEXT, " +
                     NOTE_CREATED + " TEXT default CURRENT_TIMESTAMP" +
                     ")";

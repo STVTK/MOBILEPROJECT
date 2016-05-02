@@ -16,8 +16,10 @@ public class EditorActivity extends ActionBarActivity {
 
     private String action;
     private EditText editor;
+    private EditText Title;
     private String noteFilter;
     private String oldText;
+    private String oldTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +27,7 @@ public class EditorActivity extends ActionBarActivity {
         setContentView(R.layout.activity_editor);
 
         editor = (EditText) findViewById(R.id.editText);
+        Title = (EditText)findViewById(R.id.Title);
 
         Intent intent = getIntent();
 
@@ -41,8 +44,11 @@ public class EditorActivity extends ActionBarActivity {
                     DBOpenHelper.ALL_COLUMNS, noteFilter, null, null);
             cursor.moveToFirst();
             oldText = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TEXT));
+            oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TITLE));
             editor.setText(oldText);
+            Title.setText(oldTitle);
             editor.requestFocus();
+            Title.requestFocus();
         }
     }
 
@@ -82,39 +88,42 @@ public class EditorActivity extends ActionBarActivity {
 
     private void finishEditing() {
         String newText = editor.getText().toString().trim();
+        String newTitle = Title.getText().toString().trim();
 
         switch (action) {
             case Intent.ACTION_INSERT:
-                if (newText.length() == 0) {
+                if (newText.length() == 0 && newTitle.length()==0) {
                     setResult(RESULT_CANCELED);
                 } else {
-                    insertNote(newText);
+                    insertNote(newText, newTitle);
                 }
                 break;
             case Intent.ACTION_EDIT:
-                if (newText.length() == 0) {
+                if (newText.length() == 0 && newTitle.length() == 0) {
                     deleteNote();
-                } else if (oldText.equals(newText)) {
+                } else if (oldText.equals(newText) && oldTitle.equals(newTitle)) {
                     setResult(RESULT_CANCELED);
                 } else {
-                    updateNote(newText);
+                    updateNote(newText, newTitle);
                 }
 
         }
         finish();
     }
 
-    private void updateNote(String noteText) {
+    private void updateNote(String noteText, String noteTitle) {
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.NOTE_TEXT, noteText);
+        values.put(DBOpenHelper.NOTE_TITLE, noteTitle);
         getContentResolver().update(NotesProvider.CONTENT_URI, values, noteFilter, null);
         Toast.makeText(this, getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
     }
 
-    private void insertNote(String noteText) {
+    private void insertNote(String noteText, String noteTitle) {
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.NOTE_TEXT, noteText);
+        values.put(DBOpenHelper.NOTE_TITLE, noteTitle);
         getContentResolver().insert(NotesProvider.CONTENT_URI, values);
         setResult(RESULT_OK);
     }

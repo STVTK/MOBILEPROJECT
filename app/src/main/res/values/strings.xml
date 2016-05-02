@@ -10,5 +10,6 @@
     <string name="action_delete">Delete</string>
     <string name="note_deleted">Note deleted</string>
     <string name="note">Note</string>
-    <string name="enter_note_here">Enter note here</string>
+    <string name="enter_note_here">Note</string>
+    <string name="NotesTitle">Title</string>
 </resources>

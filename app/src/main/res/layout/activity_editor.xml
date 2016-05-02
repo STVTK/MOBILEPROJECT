@@ -1,4 +1,4 @@
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,20 +7,30 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin"
-    tools:context="com.stv.mynotes.EditorActivity">
+    tools:context="com.stv.mynotes.EditorActivity"
+    android:orientation="vertical">
 
 
     <EditText
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editText"
-        android:gravity="top"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:hint="@string/enter_note_here"
-        android:inputType="textMultiLine|textCapSentences"/>
-</RelativeLayout>
+        android:id="@+id/Title"
+        android:layout_gravity="center_horizontal"
+        android:hint="@string/NotesTitle"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:background="@android:color/transparent"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal">
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/editText"
+            android:gravity="top"
+            android:hint="@string/enter_note_here"
+            android:inputType="textMultiLine|textCapSentences"/>
+    </FrameLayout>
+</LinearLayout>

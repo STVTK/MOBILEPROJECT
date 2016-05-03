@@ -9,6 +9,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -21,6 +23,10 @@ public class EditorActivity extends ActionBarActivity {
     private String oldText;
     private String oldTitle;
 
+    private String EditedDate;
+    private TextView EditedDateView;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +34,7 @@ public class EditorActivity extends ActionBarActivity {
 
         editor = (EditText) findViewById(R.id.editText);
         Title = (EditText)findViewById(R.id.Title);
+        EditedDateView = (TextView)findViewById(R.id.EditedDate);
 
         Intent intent = getIntent();
 
@@ -45,8 +52,11 @@ public class EditorActivity extends ActionBarActivity {
             cursor.moveToFirst();
             oldText = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TEXT));
             oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TITLE));
+            EditedDate = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_EDITED));
+
             editor.setText(oldText);
             Title.setText(oldTitle);
+            EditedDateView.setText(EditedDate);
             editor.requestFocus();
             Title.requestFocus();
         }
@@ -112,22 +122,27 @@ public class EditorActivity extends ActionBarActivity {
     }
 
     private void updateNote(String noteText, String noteTitle) {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.NOTE_TEXT, noteText);
         values.put(DBOpenHelper.NOTE_TITLE, noteTitle);
+        values.put(DBOpenHelper.NOTE_EDITED, dateFormat.format(date));
         getContentResolver().update(NotesProvider.CONTENT_URI, values, noteFilter, null);
         Toast.makeText(this, getString(R.string.note_updated), Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
     }
 
     private void insertNote(String noteText, String noteTitle) {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.NOTE_TEXT, noteText);
         values.put(DBOpenHelper.NOTE_TITLE, noteTitle);
+        values.put(DBOpenHelper.NOTE_EDITED, dateFormat.format(date));
         getContentResolver().insert(NotesProvider.CONTENT_URI, values);
         setResult(RESULT_OK);
     }
-
     @Override
     public void onBackPressed() {
         finishEditing();

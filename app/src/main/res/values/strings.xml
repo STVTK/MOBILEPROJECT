@@ -12,4 +12,5 @@
     <string name="note">Note</string>
     <string name="enter_note_here">Note</string>
     <string name="NotesTitle">Title</string>
+    <string name="NotAvaible">N/A</string>
 </resources>

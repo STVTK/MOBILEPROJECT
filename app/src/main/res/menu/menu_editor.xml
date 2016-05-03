@@ -3,6 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.stv.mynotes.EditorActivity">
     <item
+        android:id="@+id/action_download"
+        android:title="@string/action_download"
+        android:icon="@mipmap/dev_logo"
+        android:orderInCategory="100"
+        app:showAsAction="always" />
+    <item
         android:id="@+id/action_delete"
         android:title="@string/action_delete"
         android:icon="@drawable/ic_action_delete"

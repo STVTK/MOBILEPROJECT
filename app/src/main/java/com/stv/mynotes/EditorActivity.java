@@ -1,17 +1,29 @@
 package com.stv.mynotes;
 
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import org.apache.commons.io.IOUtils;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Scanner;
+import java.util.concurrent.ExecutionException;
 
 
 public class EditorActivity extends ActionBarActivity {
@@ -82,16 +94,66 @@ public class EditorActivity extends ActionBarActivity {
             case R.id.action_delete:
                 deleteNote();
                 break;
+            case R.id.action_download:
+                DownloadWebContent();
+                break;
         }
 
         return true;
+    }
+    private void DownloadWebContent(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("URL");
+
+        final EditText input = new EditText(EditorActivity.this);
+        input.setHint("Example https://www.google.com ");
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialogBuilder.setView(input);
+        alertDialogBuilder
+                .setMessage("Enter a url")
+                .setCancelable(true)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    boolean is_Empty = false;
+
+                    public void onClick(DialogInterface dialog, int id) {
+                        String url = input.getText().toString().trim();
+                        if (!url.equals("")) {
+                            Toast.makeText(getApplicationContext(), url, Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Nothing Huh ?!", Toast.LENGTH_LONG).show();
+                            is_Empty = true;
+                        }
+                        if (!is_Empty) {
+                            DownloadTask task = new DownloadTask();
+                            String result = null;
+
+                            try {
+                                result = task.execute(url).get();
+                            } catch (Exception e) {
+                                Toast.makeText(getApplicationContext(), "Failed to get " + url + " content", Toast.LENGTH_LONG).show();
+                            }
+                            if (result!= null) {
+                                editor.getText();
+                                editor.setText(editor.getText() + result);
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialogBuilder.show();
     }
 
     private void deleteNote() {
         getContentResolver().delete(NotesProvider.CONTENT_URI,
                 noteFilter, null);
-        Toast.makeText(this, getString(R.string.note_deleted),
-                Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.note_deleted), Toast.LENGTH_SHORT).show();
         setResult(RESULT_OK);
         finish();
     }

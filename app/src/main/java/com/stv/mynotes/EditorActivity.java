@@ -52,7 +52,7 @@ public class EditorActivity extends ActionBarActivity {
             noteFilter = DBOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
 
             Cursor cursor = getContentResolver().query(uri,
-                    DBOpenHelper.ALL_COLUMNS, noteFilter, null, null);
+                    DBOpenHelper.NOTES_ALL_COLUMNS, noteFilter, null, null);
             cursor.moveToFirst();
             oldText = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TEXT));
             oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TITLE));

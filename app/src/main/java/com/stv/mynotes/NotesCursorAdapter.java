@@ -24,8 +24,8 @@ public class NotesCursorAdapter extends CursorAdapter{
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
 
-        String noteText = cursor.getString(
-                cursor.getColumnIndex(DBOpenHelper.NOTE_TEXT));
+        String noteText = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TEXT));
+        String noteTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TITLE));
 
         int pos = noteText.indexOf(10);
         if (pos != -1) {
@@ -34,6 +34,9 @@ public class NotesCursorAdapter extends CursorAdapter{
 
         TextView tv = (TextView) view.findViewById(R.id.tvNote);
         tv.setText(noteText);
+
+        TextView TitleNote = (TextView) view.findViewById(R.id.TitleNote);
+        TitleNote.setText(noteTitle);
 
     }
 }

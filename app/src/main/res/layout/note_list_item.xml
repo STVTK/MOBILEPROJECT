@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:padding="4dp">
-
+    android:padding="4dp"
+    android:orientation="horizontal">
     <ImageView
         android:id="@+id/imageDocIcon"
         android:layout_width="36dp"
@@ -12,18 +12,36 @@
         android:src="@drawable/ic_document"
         android:contentDescription="@string/note"/>
 
-    <TextView
-        android:id="@+id/tvNote"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_margin="4dp"
-        android:layout_toEndOf="@+id/imageDocIcon"
-        android:layout_toRightOf="@+id/imageDocIcon"
-        android:singleLine="true"
-        android:text="Dummy Text"
-        android:textColor="@color/list_item_text"
-        android:textSize="18sp" />
+        android:layout_gravity="center_horizontal">
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="@string/NotesTitle"
+            android:id="@+id/TitleNote"
+            android:ellipsize="end"
+            android:singleLine="true"
+            />
+
+        <TextView
+            android:id="@+id/tvNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="4dp"
+            android:layout_toEndOf="@+id/imageDocIcon"
+            android:layout_toRightOf="@+id/imageDocIcon"
+            android:singleLine="true"
+            android:text="@string/enter_note_here"
+            android:textColor="@color/list_item_text"
+            android:textSize="18sp"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
+</LinearLayout>

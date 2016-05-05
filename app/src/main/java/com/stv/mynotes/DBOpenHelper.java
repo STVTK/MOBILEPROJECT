@@ -27,7 +27,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     //Constants for identifying table and columns
     //COMMON
     public static final String KEY_ID = "_id";
-    public static final String DATE_TIME_CREATED = "DATE TIME CREATED";
+    public static final String DATE_TIME_CREATED = "date_time_created";
 
     //NOTES
     public static final String TABLE_NOTES = "notes";
@@ -101,9 +101,9 @@ public class DBOpenHelper extends SQLiteOpenHelper{
 
         long note_id = db.insert(TABLE_NOTES, null, values);
 
-        for(long tag_id : tag_ids){
-            createNoteTag(note_id, tag_id);
-        }
+//        for(long tag_id : tag_ids){
+//            createNoteTag(note_id, tag_id);
+//        }
         return note_id;
     }
     //GET A NOTE

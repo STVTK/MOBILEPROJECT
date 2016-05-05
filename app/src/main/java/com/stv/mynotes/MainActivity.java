@@ -1,61 +1,53 @@
 package com.stv.mynotes;
 
 import android.app.AlertDialog;
-import android.app.LoaderManager;
-import android.content.ContentValues;
-import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CursorAdapter;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.stv.mynotes.Entity.Note;
+
 
 public class MainActivity extends ActionBarActivity
-implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private static final int EDITOR_REQUEST_CODE = 1001;
-    private CursorAdapter cursorAdapter;
+    private DBOpenHelper db;
+    private NoteAdapter noteadapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        cursorAdapter = new NotesCursorAdapter(this, null, 0);
+        db = new DBOpenHelper(getApplicationContext());
+        noteadapter = new NoteAdapter(this,db.getAllNotes());
 
         ListView list = (ListView) findViewById(android.R.id.list);
-        list.setAdapter(cursorAdapter);
+        list.setAdapter(noteadapter);
 
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, EditorActivity.class);
-                Uri uri = Uri.parse(NotesProvider.CONTENT_URI + "/" + id);
-                intent.putExtra(NotesProvider.CONTENT_ITEM_TYPE, uri);
+                intent.putExtra("Note", id);
                 startActivityForResult(intent, EDITOR_REQUEST_CODE);
             }
         });
 
-        getLoaderManager().initLoader(0, null, this);
-
     }
 
     private void insertNote(String noteText, String noteTitle) {
-        ContentValues values = new ContentValues();
-        values.put(DBOpenHelper.NOTE_TEXT, noteText);
-        values.put(DBOpenHelper.NOTE_TITLE, noteTitle);
-        Uri noteUri = getContentResolver().insert(NotesProvider.CONTENT_URI,
-                values);
+        Note newNote = new Note();
+        newNote.setText(noteText);
+        newNote.setTitle(noteTitle);
+        long insert = db.createNOTE(newNote,null);
     }
 
 
@@ -113,33 +105,17 @@ implements LoaderManager.LoaderCallbacks<Cursor>
         insertNote("Simple note", "Title1");
         insertNote("Multi-line\nnote", "Title2");
         insertNote("Very long note with a lot of text that exceeds the width of the screen", "Title3");
+        Toast.makeText(MainActivity.this, "Samples created", Toast.LENGTH_SHORT).show();
         restartLoader();
     }
 
     private void restartLoader() {
-        getLoaderManager().restartLoader(0, null, this);
-    }
-
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, NotesProvider.CONTENT_URI,
-                null, null, null, null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        cursorAdapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
-        cursorAdapter.swapCursor(null);
+        noteadapter.notifyDataSetChanged();
     }
 
     public void openEditorForNewNote(View view) {
         Intent intent = new Intent(this, EditorActivity.class);
         startActivityForResult(intent, EDITOR_REQUEST_CODE);
-
     }
 
     @Override

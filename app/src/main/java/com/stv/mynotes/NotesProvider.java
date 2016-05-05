@@ -42,12 +42,12 @@ public class NotesProvider extends ContentProvider{
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
 
         if (uriMatcher.match(uri) == NOTES_ID) {
-            selection = DBOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
+            selection = DBOpenHelper.KEY_ID + "=" + uri.getLastPathSegment();
         }
 
         return database.query(DBOpenHelper.TABLE_NOTES, DBOpenHelper.NOTES_ALL_COLUMNS,
                 selection, null, null, null,
-                DBOpenHelper.NOTE_CREATED + " DESC");
+                DBOpenHelper.DATE_TIME_CREATED + " DESC");
     }
 
     @Override

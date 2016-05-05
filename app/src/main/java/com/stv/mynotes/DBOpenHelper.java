@@ -10,8 +10,11 @@ import android.util.Log;
 import com.stv.mynotes.Entity.Note;
 import com.stv.mynotes.Entity.Tag;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DBOpenHelper extends SQLiteOpenHelper{
 
@@ -99,7 +102,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
         long note_id = db.insert(TABLE_NOTES, null, values);
 
         for(long tag_id : tag_ids){
-            createTodoTag(note_id, tag_id);
+            createNoteTag(note_id, tag_id);
         }
         return note_id;
     }
@@ -214,7 +217,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
         values.put(DATE_TIME_CREATED, getDateTime());
 
         // insert row
-        long tag_id = db.insert(TABLE_TAG, null, values);
+        long tag_id = db.insert(TABLE_NOTES, null, values);
 
         return tag_id;
     }
@@ -224,7 +227,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
      * */
     public List<Tag> getAllTags() {
         List<Tag> tags = new ArrayList<Tag>();
-        String selectQuery = "SELECT  * FROM " + TABLE_TAG;
+        String selectQuery = "SELECT  * FROM " + TABLE_NOTES;
 
         Log.e(LOG, selectQuery);
 
@@ -236,7 +239,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
             do {
                 Tag t = new Tag();
                 t.setId(c.getInt((c.getColumnIndex(KEY_ID))));
-                t.setTagName(c.getString(c.getColumnIndex(KEY_TAG_NAME)));
+                t.setIdentifier(c.getString(c.getColumnIndex(TAG_IDENTIFIER)));
 
                 // adding to tags list
                 tags.add(t);
@@ -252,35 +255,91 @@ public class DBOpenHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(KEY_TAG_NAME, tag.getTagName());
+        values.put(TAG_IDENTIFIER, tag.getIdentifier());
 
         // updating row
-        return db.update(TABLE_TAG, values, KEY_ID + " = ?",
+        return db.update(TABLE_TAGS, values, KEY_ID + " = ?",
                 new String[] { String.valueOf(tag.getId()) });
     }
 
     /*
      * Deleting a tag
      */
-    public void deleteTag(Tag tag, boolean should_delete_all_tag_todos) {
+    public void deleteTag(Tag tag, boolean should_delete_all_tag_notes) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // before deleting tag
         // check if todos under this tag should also be deleted
-        if (should_delete_all_tag_todos) {
+        if (should_delete_all_tag_notes) {
             // get all todos under this tag
-            List<Todo> allTagToDos = getAllToDosByTag(tag.getTagName());
+            List<Note> allTagNotes = getAllNotesByTag(tag.getIdentifier());
 
             // delete all todos
-            for (Todo todo : allTagToDos) {
+            for (Note note : allTagNotes) {
                 // delete todo
-                deleteToDo(todo.getId());
+                deleteNote(note.getId());
             }
         }
 
         // now delete the tag
-        db.delete(TABLE_TAG, KEY_ID + " = ?",
+        db.delete(TABLE_TAGS, KEY_ID + " = ?",
                 new String[] { String.valueOf(tag.getId()) });
     }
+    // ------------------------ "note_tags" table methods ----------------//
 
+    /*
+     * Creating note_tag
+     */
+    public long createNoteTag(long note_id, long tag_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_NOTE_ID, note_id);
+        values.put(KEY_TAG_ID, tag_id);
+        values.put(DATE_TIME_CREATED, getDateTime());
+
+        long id = db.insert(TABLE_NOTE_TAG, null, values);
+
+        return id;
+    }
+
+    /*
+     * Updating a note tag
+     */
+    public int updateNoteTag(long id, long tag_id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_TAG_ID, tag_id);
+
+        // updating row
+        return db.update(TABLE_NOTES, values, KEY_ID + " = ?",
+                new String[] { String.valueOf(id) });
+    }
+
+    /*
+     * Deleting a Note tag
+     */
+    public void deleteNoteTag(long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NOTES, KEY_ID + " = ?",
+                new String[] { String.valueOf(id) });
+    }
+
+    // closing database
+    public void closeDB() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        if (db != null && db.isOpen())
+            db.close();
+    }
+
+    /**
+     * get datetime
+     * */
+    private String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
 }

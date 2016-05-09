@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.stv.mynotes" >
+    package="com.stv.mynotes">
+
     <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
-            android:name="com.stv.mynotes.MainActivity"
-            android:label="@string/app_name" >
+            android:name=".MainActivity"
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -18,18 +20,19 @@
         </activity>
 
         <provider
-            android:name="com.stv.mynotes.NotesProvider"
+            android:name=".NotesProvider"
             android:authorities="com.stv.mynotes.notesprovider"
             android:exported="false" />
 
         <activity
-            android:name="com.stv.mynotes.EditorActivity"
+            android:name=".EditorActivity"
             android:label="@string/title_activity_editor"
-            android:parentActivityName="com.stv.mynotes.MainActivity" >
+            android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.stv.mynotes.MainActivity" />
         </activity>
+        <activity android:name=".tags_list"></activity>
     </application>
 
 </manifest>

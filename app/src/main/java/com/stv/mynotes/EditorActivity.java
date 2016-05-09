@@ -89,9 +89,47 @@ public class EditorActivity extends ActionBarActivity {
             case R.id.action_download:
                 DownloadWebContent();
                 break;
+            case R.id.action_add_tag:
+                AddTags();
+                break;
         }
 
         return true;
+    }
+    private void AddTags(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Tag");
+
+        final EditText input = new EditText(EditorActivity.this);
+        input.setHint("Example: Tech, TODO ...");
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        input.setLayoutParams(lp);
+        alertDialogBuilder.setView(input);
+        alertDialogBuilder
+                .setMessage("Enter a Tag")
+                .setCancelable(true)
+                .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                    boolean is_Empty = false;
+
+                    public void onClick(DialogInterface dialog, int id) {
+                        String url = input.getText().toString().trim();
+                        if (url.equals("")) {
+                            Toast.makeText(getApplicationContext(), "Nothing Huh ?!", Toast.LENGTH_LONG).show();
+                            is_Empty = true;
+                        }
+                        if (!is_Empty) {
+
+                        }
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        alertDialogBuilder.show();
     }
     private void DownloadWebContent(){
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);

@@ -45,9 +45,7 @@ implements LoaderManager.LoaderCallbacks<Cursor>
                 startActivityForResult(intent, EDITOR_REQUEST_CODE);
             }
         });
-
         getLoaderManager().initLoader(0, null, this);
-
     }
 
     private void insertNote(String noteText, String noteTitle) {

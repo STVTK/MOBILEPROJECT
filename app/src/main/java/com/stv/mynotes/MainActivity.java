@@ -52,8 +52,7 @@ implements LoaderManager.LoaderCallbacks<Cursor>
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.NOTE_TEXT, noteText);
         values.put(DBOpenHelper.NOTE_TITLE, noteTitle);
-        Uri noteUri = getContentResolver().insert(NotesProvider.CONTENT_URI,
-                values);
+        Uri noteUri = getContentResolver().insert(NotesProvider.CONTENT_URI, values);
     }
 
 
@@ -74,6 +73,10 @@ implements LoaderManager.LoaderCallbacks<Cursor>
                 break;
             case R.id.action_delete_all:
                 deleteAllNotes();
+                break;
+            case R.id.action_add_tag:
+                Intent intent = new Intent(this, tags_list.class);
+                startActivity(intent);
                 break;
         }
 
@@ -135,8 +138,8 @@ implements LoaderManager.LoaderCallbacks<Cursor>
     }
 
     public void openEditorForNewNote(View view) {
-        Intent intent = new Intent(this, EditorActivity.class);
-        startActivityForResult(intent, EDITOR_REQUEST_CODE);
+            Intent intent = new Intent(this, EditorActivity.class);
+            startActivityForResult(intent, EDITOR_REQUEST_CODE);
 
     }
 

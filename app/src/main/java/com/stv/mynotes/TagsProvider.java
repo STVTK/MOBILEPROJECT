@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 public class TagsProvider extends ContentProvider{
+
     private static final String AUTHORITY = "com.stv.mynotes.tagsprovider";
     private static final String BASE_PATH = "tags";
     public static final Uri CONTENT_URI =
@@ -35,25 +36,19 @@ public class TagsProvider extends ContentProvider{
         return true;
     }
 
-    @Nullable
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         if (uriMatcher.match(uri) == TAGS_ID) {
-            selection = DBOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
+            selection = DBOpenHelper.TAG_ID + "=" + uri.getLastPathSegment();
         }
-
-        return database.query(DBOpenHelper.TABLE_NOTES, DBOpenHelper.ALL_COLUMNS,
-                selection, null, null, null,
-                DBOpenHelper.NOTE_CREATED + " DESC");
+        return database.query(DBOpenHelper.TABLE_TAGS, DBOpenHelper.TAG_ALL_COLUMNS, selection, null, null, null, DBOpenHelper.TAG_CREATED+ " DESC");
     }
 
-    @Nullable
     @Override
     public String getType(Uri uri) {
         return null;
     }
 
-    @Nullable
     @Override
     public Uri insert(Uri uri, ContentValues values) {
         long id = database.insert(DBOpenHelper.TABLE_TAGS, null, values);

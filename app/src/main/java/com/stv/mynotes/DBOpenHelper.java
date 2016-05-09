@@ -31,8 +31,12 @@ public class DBOpenHelper extends SQLiteOpenHelper{
 
 
 
-    public static final String[] ALL_COLUMNS =
+    public static final String[] NOTE_ALL_COLUMNS =
             {NOTE_ID, NOTE_TEXT, NOTE_CREATED, NOTE_TITLE, NOTE_EDITED};
+    public static final String[] TAG_ALL_COLUMNS =
+            {TAG_ID, TAG_IDENTIFIER, TAG_CREATED};
+    public static final String[] NOTE_TAG_ALL_COLUMNS =
+            {NOTE_TAG_ID, KEY_NOTE_ID, KEY_TAG_ID, NOTE_TAG_CREATED};
 
     //SQL to create table
     private static final String TABLE_CREATE =

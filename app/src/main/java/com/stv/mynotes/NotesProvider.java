@@ -44,7 +44,7 @@ public class NotesProvider extends ContentProvider{
             selection = DBOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
         }
 
-        return database.query(DBOpenHelper.TABLE_NOTES, DBOpenHelper.ALL_COLUMNS,
+        return database.query(DBOpenHelper.TABLE_NOTES, DBOpenHelper.NOTE_ALL_COLUMNS,
                 selection, null, null, null,
                 DBOpenHelper.NOTE_CREATED + " DESC");
     }

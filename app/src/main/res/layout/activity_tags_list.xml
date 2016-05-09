@@ -10,9 +10,19 @@
     tools:context="com.stv.mynotes.tags_list">
 
     <ListView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:id="@+id/tags_listview"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true" />
+    <ImageButton
+        android:id="@+id/addTag"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:onClick="openAlertForNewTag"
+        android:src="@drawable/ic_action_add"
+        android:background="@drawable/circle"/>
+
 </RelativeLayout>

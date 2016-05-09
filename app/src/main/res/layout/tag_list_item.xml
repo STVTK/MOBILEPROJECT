@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    android:padding="4dp"
+    android:orientation="horizontal">
+    <ImageView
+        android:id="@+id/imageDocIcon"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:src="@drawable/tag_icon_list"
+        android:contentDescription="@string/note"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/NotesTitle"
+        android:id="@+id/TitleTag"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:layout_alignParentTop="true"
+        android:layout_alignStart="@+id/NotesNumber"
+        android:paddingLeft="5dp"/>
+
+    <TextView
+        android:id="@+id/NotesNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="4dp"
+        android:layout_toEndOf="@+id/imageDocIcon"
+        android:layout_toRightOf="@+id/imageDocIcon"
+        android:singleLine="true"
+        android:text="@string/notes_number"
+        android:textColor="@color/list_item_text"
+        android:textSize="18sp"
+        android:ellipsize="end"
+        android:layout_row="0"
+        android:layout_column="13" />
+</GridLayout>

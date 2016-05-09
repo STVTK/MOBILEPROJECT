@@ -51,8 +51,7 @@ public class EditorActivity extends ActionBarActivity {
             action = Intent.ACTION_EDIT;
             noteFilter = DBOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
 
-            Cursor cursor = getContentResolver().query(uri,
-                    DBOpenHelper.ALL_COLUMNS, noteFilter, null, null);
+            Cursor cursor = getContentResolver().query(uri, DBOpenHelper.NOTE_ALL_COLUMNS, noteFilter, null, null);
             cursor.moveToFirst();
             oldText = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TEXT));
             oldTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TITLE));
@@ -235,6 +234,7 @@ public class EditorActivity extends ActionBarActivity {
         getContentResolver().insert(NotesProvider.CONTENT_URI, values);
         setResult(RESULT_OK);
     }
+
     @Override
     public void onBackPressed() {
         finishEditing();

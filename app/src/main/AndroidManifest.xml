@@ -23,6 +23,10 @@
             android:name=".NotesProvider"
             android:authorities="com.stv.mynotes.notesprovider"
             android:exported="false" />
+        <provider
+            android:name=".TagsProvider"
+            android:authorities="com.stv.mynotes.tagsprovider"
+            android:exported="false" />
 
         <activity
             android:name=".EditorActivity"
@@ -32,7 +36,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.stv.mynotes.MainActivity" />
         </activity>
-        <activity android:name=".tags_list"></activity>
+
+        <activity
+            android:name=".tags_list"
+            android:parentActivityName=".MainActivity"
+            android:label="@string/all_tags" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.stv.mynotes.MainActivity" />
+        </activity>
     </application>
 
 </manifest>

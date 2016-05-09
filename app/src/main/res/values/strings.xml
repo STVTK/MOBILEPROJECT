@@ -15,4 +15,6 @@
     <string name="NotesTitle">Title</string>
     <string name="NotAvaible">N/A</string>
     <string name="action_add_tag">Add Tags</string>
+    <string name="notes_number">Notes Number</string>
+    <string name="all_tags">My Tags</string>
 </resources>

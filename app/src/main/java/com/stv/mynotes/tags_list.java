@@ -40,7 +40,10 @@ public class tags_list extends ActionBarActivity implements LoaderManager.Loader
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Uri uri = Uri.parse(TagsProvider.CONTENT_URI + "/" + id);
+            Uri uri = Uri.parse(TagsProvider.CONTENT_URI + "/" + id);
+            Intent intent = new Intent(tags_list.this, NotesByTagList.class);
+            intent.putExtra(NotesProvider.CONTENT_ITEM_TYPE, uri);
+            startActivity(intent);
             }
         });
         list.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -50,7 +53,6 @@ public class tags_list extends ActionBarActivity implements LoaderManager.Loader
                 Uri uri = Uri.parse(TagsProvider.CONTENT_URI + "/" + id);
                 TagFilter = DBOpenHelper.TAG_ID + "=" + uri.getLastPathSegment();
 
-                Toast.makeText(tags_list.this, "bello", Toast.LENGTH_SHORT).show();
                 openAlertForUpdateTag(uri);
                 return true;
             }
@@ -127,8 +129,7 @@ public class tags_list extends ActionBarActivity implements LoaderManager.Loader
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(this, TagsProvider.CONTENT_URI,
-                null, null, null, null);
+        return new CursorLoader(this, TagsProvider.CONTENT_URI, null, null, null, null);
     }
 
     @Override

@@ -23,6 +23,7 @@ public class TagsProvider extends ContentProvider{
 
     public static final String CONTENT_ITEM_TYPE = "Tag";
 
+
     static {
         uriMatcher.addURI(AUTHORITY, BASE_PATH, TAGS);
         uriMatcher.addURI(AUTHORITY, BASE_PATH +  "/#", TAGS_ID);

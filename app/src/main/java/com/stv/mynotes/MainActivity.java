@@ -3,6 +3,7 @@ package com.stv.mynotes;
 import android.app.AlertDialog;
 import android.app.LoaderManager;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.CursorLoader;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,11 +26,13 @@ implements LoaderManager.LoaderCallbacks<Cursor>
 {
     private static final int EDITOR_REQUEST_CODE = 1001;
     private CursorAdapter cursorAdapter;
+    public static Context baseContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        baseContext = getBaseContext();
 
         cursorAdapter = new NotesCursorAdapter(this, null, 0);
 
@@ -52,7 +55,8 @@ implements LoaderManager.LoaderCallbacks<Cursor>
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.NOTE_TEXT, noteText);
         values.put(DBOpenHelper.NOTE_TITLE, noteTitle);
-        Uri noteUri = getContentResolver().insert(NotesProvider.CONTENT_URI, values);
+        Uri noteUri = getContentResolver().insert(NotesProvider.CONTENT_URI,
+                values);
     }
 
 
@@ -138,9 +142,8 @@ implements LoaderManager.LoaderCallbacks<Cursor>
     }
 
     public void openEditorForNewNote(View view) {
-            Intent intent = new Intent(this, EditorActivity.class);
-            startActivityForResult(intent, EDITOR_REQUEST_CODE);
-
+        Intent intent = new Intent(this, EditorActivity.class);
+        startActivityForResult(intent, EDITOR_REQUEST_CODE);
     }
 
     @Override

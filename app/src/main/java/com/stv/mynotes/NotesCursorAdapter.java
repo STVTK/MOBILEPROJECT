@@ -37,5 +37,6 @@ public class NotesCursorAdapter extends CursorAdapter{
 
         TextView TitleNote = (TextView) view.findViewById(R.id.TitleNote);
         TitleNote.setText(noteTitle);
+
     }
 }

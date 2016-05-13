@@ -2,6 +2,7 @@ package com.stv.mynotes;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +16,13 @@ public class TagsCursorAdapter extends CursorAdapter {
 
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        return LayoutInflater.from(context).inflate(
-                R.layout.tag_list_item, parent, false
-        );
+        return LayoutInflater.from(context).inflate(R.layout.tag_list_item, parent, false);
     }
 
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-
-//        String notesNumber = cursor.getString(cursor.getColumnIndex(DBOpenHelper.NOTE_TEXT));
         String TagTitle = cursor.getString(cursor.getColumnIndex(DBOpenHelper.TAG_IDENTIFIER));
-//        String TagTitle = "TITIKE TAG";
-        String notesNumber = "5";
+        int notesNumber = DBOpenHelper.getNotesCountByTag(TagTitle);
         int pos = TagTitle.indexOf(10);
         if (pos != -1) {
             TagTitle= TagTitle.substring(0, pos) + " ...";
@@ -36,6 +32,6 @@ public class TagsCursorAdapter extends CursorAdapter {
         tv.setText(TagTitle);
 
         TextView NotesNumber= (TextView) view.findViewById(R.id.NotesNumber);
-        NotesNumber.setText(notesNumber);
+        NotesNumber.setText(String.valueOf(notesNumber));
     }
 }

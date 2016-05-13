@@ -1,8 +1,11 @@
 package com.stv.mynotes;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import java.sql.SQLException;
 
 public class DBOpenHelper extends SQLiteOpenHelper{
 
@@ -23,11 +26,11 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     public static final String TAG_IDENTIFIER = "tagIdentifier";
     public static final String TAG_CREATED = "tagCreated";
     //NOTE_TAG
-    private static final String TABLE_NOTE_TAG = "note_tag";
-    private static final String NOTE_TAG_ID = "noteTagId";
-    private static final String KEY_NOTE_ID = "note_id";
-    private static final String KEY_TAG_ID = "tag_id";
-    private static final String NOTE_TAG_CREATED = "noteTagCreated";
+    public static final String TABLE_NOTE_TAG = "note_tag";
+    public static final String NOTE_TAG_ID = "noteTagId";
+    public static final String KEY_NOTE_ID = "note_id";
+    public static final String KEY_TAG_ID = "tag_id";
+    public static final String NOTE_TAG_CREATED = "noteTagCreated";
 
 
 
@@ -80,5 +83,19 @@ public class DBOpenHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_TAGS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NOTE_TAG);
         onCreate(db);
+    }
+    public static int getNotesCountByTag(String tag_identifier){
+        String selectQuery = "SELECT * FROM " + TABLE_NOTES + " tn, "
+                + TABLE_TAGS + " tg, " + TABLE_NOTE_TAG + " tnt WHERE tg."
+                + TAG_IDENTIFIER + " = '" + tag_identifier + "'" + "AND tg." + TAG_ID
+                + " = " + "tnt." + KEY_TAG_ID + " AND tn." + NOTE_ID + " = " + "tnt."
+                + KEY_NOTE_ID;
+
+        DBOpenHelper helper = new DBOpenHelper(MainActivity.baseContext);
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery,null);
+        int count = cursor.getCount();
+        cursor.close();
+        return count;
     }
 }

@@ -31,7 +31,6 @@ public class NotesProvider extends ContentProvider{
 
     @Override
     public boolean onCreate() {
-
         DBOpenHelper helper = new DBOpenHelper(getContext());
         database = helper.getWritableDatabase();
         return true;
@@ -39,7 +38,6 @@ public class NotesProvider extends ContentProvider{
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-
         if (uriMatcher.match(uri) == NOTES_ID) {
             selection = DBOpenHelper.NOTE_ID + "=" + uri.getLastPathSegment();
         }
@@ -56,8 +54,7 @@ public class NotesProvider extends ContentProvider{
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        long id = database.insert(DBOpenHelper.TABLE_NOTES,
-                null, values);
+        long id = database.insert(DBOpenHelper.TABLE_NOTES, null, values);
         return Uri.parse(BASE_PATH + "/" + id);
     }
 
@@ -68,7 +65,6 @@ public class NotesProvider extends ContentProvider{
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return database.update(DBOpenHelper.TABLE_NOTES,
-                values, selection, selectionArgs);
+        return database.update(DBOpenHelper.TABLE_NOTES, values, selection, selectionArgs);
     }
 }

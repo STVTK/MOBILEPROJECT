@@ -18,4 +18,8 @@
     <string name="action_add_tag">Add Tags</string>
     <string name="notes_number">Notes Number</string>
     <string name="all_tags">My Tags</string>
+    <string name="search">Search</string>
+    <string name="search_hint">Search the notes</string>
+    <string name="app_label">My Notes</string>
+    <string name="title_activity_search_list">Search_list</string>
 </resources>

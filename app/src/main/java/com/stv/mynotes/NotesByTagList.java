@@ -153,6 +153,7 @@ public class NotesByTagList extends AppCompatActivity implements View.OnTouchLis
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == EDITOR_REQUEST_CODE && resultCode == RESULT_OK) {
+            loadActivity();
             restartLoader();
         }
     }

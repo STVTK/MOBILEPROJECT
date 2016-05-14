@@ -249,6 +249,8 @@ public class EditorActivity extends ActionBarActivity {
             if (cursor != null && cursor.moveToFirst()) {
                 lastId = cursor.getLong(0); //The 0 is the column index, we only have 1 column, so the index is 0
             }
+            Toast.makeText(this, String.valueOf(lastId), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, String.valueOf(tag_id), Toast.LENGTH_SHORT).show();
             values.put(DBOpenHelper.KEY_NOTE_ID,lastId);
         } else {
             values.put(DBOpenHelper.KEY_NOTE_ID, getNoteId());

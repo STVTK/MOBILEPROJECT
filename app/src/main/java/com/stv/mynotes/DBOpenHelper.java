@@ -31,6 +31,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     public static final String KEY_NOTE_ID = "note_id";
     public static final String KEY_TAG_ID = "tag_id";
     public static final String NOTE_TAG_CREATED = "noteTagCreated";
+    public static final String NOTE_TAG_IDENTIFIER = "noteTagIdentifier";
 
 
 
@@ -39,7 +40,7 @@ public class DBOpenHelper extends SQLiteOpenHelper{
     public static final String[] TAG_ALL_COLUMNS =
             {TAG_ID, TAG_IDENTIFIER, TAG_CREATED};
     public static final String[] NOTE_TAG_ALL_COLUMNS =
-            {NOTE_TAG_ID, KEY_NOTE_ID, KEY_TAG_ID, NOTE_TAG_CREATED};
+            {NOTE_TAG_ID, KEY_NOTE_ID, KEY_TAG_ID, NOTE_TAG_CREATED,NOTE_TAG_IDENTIFIER};
 
     //SQL to create table
     private static final String TABLE_CREATE =
@@ -61,7 +62,8 @@ public class DBOpenHelper extends SQLiteOpenHelper{
                     NOTE_TAG_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     KEY_TAG_ID + " TEXT," +
                     KEY_NOTE_ID + " TEXT," +
-                    NOTE_TAG_CREATED + " TEXT default CURRENT_TIMESTAMP" +
+                    NOTE_TAG_CREATED + " TEXT default CURRENT_TIMESTAMP," +
+                    NOTE_TAG_IDENTIFIER + " TEXT unique" +
                     ")";
 
 

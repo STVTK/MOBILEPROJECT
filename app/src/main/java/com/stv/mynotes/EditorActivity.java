@@ -6,15 +6,11 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -118,7 +114,6 @@ public class EditorActivity extends ActionBarActivity {
             public void onClick(DialogInterface dialog, int item) {
                 String selectedTad = allTags[item];
                 long id = getTagId(selectedTad);
-//                insertNoteTag(id);
                 insertNoteTag(id);
                 Toast.makeText(getApplicationContext(), "TAG_ID" + String.valueOf(id), Toast.LENGTH_LONG).show();
                 Toast.makeText(getApplicationContext(), "NOTE_ID" + String.valueOf(getNoteId()), Toast.LENGTH_LONG).show();
@@ -251,9 +246,12 @@ public class EditorActivity extends ActionBarActivity {
             }
             Toast.makeText(this, String.valueOf(lastId), Toast.LENGTH_SHORT).show();
             Toast.makeText(this, String.valueOf(tag_id), Toast.LENGTH_SHORT).show();
-            values.put(DBOpenHelper.KEY_NOTE_ID,lastId);
+            values.put(DBOpenHelper.KEY_NOTE_ID, lastId);
+
+            values.put(DBOpenHelper.NOTE_TAG_IDENTIFIER,String.valueOf(tag_id) + "//" + String.valueOf(lastId));
         } else {
             values.put(DBOpenHelper.KEY_NOTE_ID, getNoteId());
+            values.put(DBOpenHelper.NOTE_TAG_IDENTIFIER,String.valueOf(tag_id) + "//" + String.valueOf(getNoteId()));
         }
         getContentResolver().insert(NoteTagProvider.CONTENT_URI, values);
         setResult(RESULT_OK);

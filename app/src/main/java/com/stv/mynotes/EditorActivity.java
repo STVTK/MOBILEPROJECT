@@ -70,6 +70,7 @@ public class EditorActivity extends ActionBarActivity {
             EditedDateView.setText(EditedDate);
             editor.requestFocus();
             Title.requestFocus();
+
         }
     }
 
@@ -115,8 +116,6 @@ public class EditorActivity extends ActionBarActivity {
                 String selectedTad = allTags[item];
                 long id = getTagId(selectedTad);
                 insertNoteTag(id);
-                Toast.makeText(getApplicationContext(), "TAG_ID" + String.valueOf(id), Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), "NOTE_ID" + String.valueOf(getNoteId()), Toast.LENGTH_LONG).show();
             }
         });
         AlertDialog alertDialogObject = dialogBuilder.create();
@@ -244,8 +243,6 @@ public class EditorActivity extends ActionBarActivity {
             if (cursor != null && cursor.moveToFirst()) {
                 lastId = cursor.getLong(0); //The 0 is the column index, we only have 1 column, so the index is 0
             }
-            Toast.makeText(this, String.valueOf(lastId), Toast.LENGTH_SHORT).show();
-            Toast.makeText(this, String.valueOf(tag_id), Toast.LENGTH_SHORT).show();
             values.put(DBOpenHelper.KEY_NOTE_ID, lastId);
 
             values.put(DBOpenHelper.NOTE_TAG_IDENTIFIER,String.valueOf(tag_id) + "//" + String.valueOf(lastId));
@@ -284,7 +281,7 @@ public class EditorActivity extends ActionBarActivity {
         String selectQuery = "SELECT * FROM " + DBOpenHelper.TABLE_TAGS + " WHERE " + DBOpenHelper.TAG_IDENTIFIER + " = '" + tag_title+"'";
         SQLiteDatabase db = new DBOpenHelper(EditorActivity.this).getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        if(cursor != null && cursor.moveToFirst()) {
+        if(cursor.moveToFirst()) {
             id = cursor.getLong(cursor.getColumnIndex(DBOpenHelper.TAG_ID));
         }
         return id;

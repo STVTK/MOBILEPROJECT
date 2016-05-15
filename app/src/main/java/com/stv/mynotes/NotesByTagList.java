@@ -8,7 +8,6 @@ import android.content.Loader;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -16,12 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Toast;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 public class NotesByTagList extends AppCompatActivity implements View.OnTouchListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -56,7 +50,6 @@ public class NotesByTagList extends AppCompatActivity implements View.OnTouchLis
         ListView list = (ListView) findViewById(R.id.All_NOTES_By_TAGS);
 
         Toast.makeText(getApplicationContext(),String.valueOf(getTagId()) , Toast.LENGTH_LONG).show();
-//        Toast.makeText(getApplicationContext(),getTagIdentifier() , Toast.LENGTH_LONG).show();
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursorAdapter = new NotesCursorAdapter(this,cursor,0);
 
@@ -66,9 +59,6 @@ public class NotesByTagList extends AppCompatActivity implements View.OnTouchLis
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Cursor selected = (Cursor) cursorAdapter.getItem(position);
-                Toast.makeText(getApplicationContext(), selected.getString(selected.getColumnIndex(DBOpenHelper.NOTE_TITLE)), Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), selected.getString(selected.getColumnIndex(DBOpenHelper.NOTE_TEXT)), Toast.LENGTH_LONG).show();
-                Toast.makeText(getApplicationContext(), selected.getString(selected.getColumnIndex(DBOpenHelper.KEY_NOTE_ID)), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(NotesByTagList.this, EditorActivity.class);
                 Uri uri = Uri.parse(NotesProvider.CONTENT_URI + "/" + selected.getLong(selected.getColumnIndex(DBOpenHelper.KEY_NOTE_ID)));
                 intent.putExtra(NotesProvider.CONTENT_ITEM_TYPE, uri);

@@ -5,8 +5,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.SQLException;
-
 public class DBOpenHelper extends SQLiteOpenHelper{
 
     //Constants for db name and version

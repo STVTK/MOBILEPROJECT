@@ -5,12 +5,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
+import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.TextPaint;
+import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -39,6 +49,13 @@ public class EditorActivity extends ActionBarActivity {
 
     private Intent intent;
 
+
+    boolean space_pressed;
+    boolean pound_pressed;
+    boolean back_pressed;
+    int length = 0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,7 +64,9 @@ public class EditorActivity extends ActionBarActivity {
         editor = (EditText) findViewById(R.id.editText);
         Title = (EditText) findViewById(R.id.Title);
         EditedDateView = (TextView) findViewById(R.id.EditedDate);
-
+        editor.addTextChangedListener(watch);
+        space_pressed = false;
+        pound_pressed = false;
         intent = getIntent();
 
         uri = intent.getParcelableExtra(NotesProvider.CONTENT_ITEM_TYPE);
@@ -70,7 +89,6 @@ public class EditorActivity extends ActionBarActivity {
             EditedDateView.setText(EditedDate);
             editor.requestFocus();
             Title.requestFocus();
-
         }
     }
 
@@ -258,6 +276,7 @@ public class EditorActivity extends ActionBarActivity {
     public void onBackPressed() {
         finishEditing();
     }
+
     private void insertTag(String Tag_title) {
         ContentValues values = new ContentValues();
         values.put(DBOpenHelper.TAG_IDENTIFIER, Tag_title);
@@ -292,4 +311,117 @@ public class EditorActivity extends ActionBarActivity {
         long id = cursor.getLong(cursor.getColumnIndex(DBOpenHelper.NOTE_ID));
         return id;
     }
+    TextWatcher watch = new TextWatcher()
+    {
+
+        public void onTextChanged(CharSequence s, int start, int before, int count)
+        {
+
+            if (s.toString().length() > 0)
+            {
+                String lastChar = s.toString().substring(s.length() - 1);
+                if (lastChar.equals(" ") && pound_pressed)//only if a pound is typed and followed by a space
+                {
+                    space_pressed = true;
+                    back_pressed = false;
+                }
+                else if (lastChar.equals("#"))
+                {
+                    pound_pressed = true;
+                }
+            }
+            if (s.toString().length() < length)//text delete
+            {
+                back_pressed = true;
+                pound_pressed = false;
+            }
+            if (s.toString().length() > length) {
+                back_pressed = false;
+            }
+        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after)
+        {
+            // text change should never be done here.
+        }
+        public void afterTextChanged(Editable s)
+        {
+            String text = s.toString();
+            length = text.length();
+            if (space_pressed == true && pound_pressed == true && !back_pressed) // pound and space are pressed not after a delete
+            {
+                int last_index = text.lastIndexOf('#');
+                if (last_index > 0)
+                {
+                    final String sub_str = text.substring(last_index, text.length() - 1); // this is your tag
+                    //The tag is oviously the substring from the last index of # minus the length
+                    //example : this text is a #test . #test will be the substring since this is
+                    //lunched only when space and pound are pressed in a row.
+                    Log.i("Test", "tag:" + sub_str);
+
+
+
+                    space_pressed = pound_pressed = false;//resetiing
+                    SpannableString span = new SpannableString(text);//building spannable text
+                    span.setSpan(clickableSpan, last_index, text.length() - 1, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);//setting span
+                    editor.setText(span);
+                    editor.setMovementMethod(LinkMovementMethod.getInstance());//aggregate methods for onclick()
+                    editor.setHighlightColor(Color.TRANSPARENT);//select color
+                }
+            }
+        }
+    };
+    /*
+        ClickableSpan class implements its own onclick method, this method gets fired every time the
+        spannable text gets to be clicked
+        The update draw state set the style of the tag
+        Inside the onclick you should add the function for adding the tag.
+         */
+    ClickableSpan clickableSpan = new ClickableSpan()
+    {
+        @Override
+        public void onClick(View widget)
+        {
+            TextView textView = (TextView) widget;
+            final String sub_str = textView.getText().toString().substring(textView.getText().toString().lastIndexOf("#"));
+            final android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(EditorActivity.this);
+            alertDialogBuilder.setTitle("Add To:");
+            final EditText input = new EditText(EditorActivity.this);
+            input.setText(sub_str.substring(1));
+            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT);
+            input.setLayoutParams(lp);
+            alertDialogBuilder.setView(input);
+            alertDialogBuilder
+                    .setCancelable(true)
+                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                        boolean is_Empty = false;
+
+                        public void onClick(DialogInterface dialog, int id) {
+                            String url = input.getText().toString().trim();
+                            if (url.equals("")) {
+                                dialog.cancel();
+                                is_Empty = true;
+                            }
+                            if (!is_Empty) {
+                                insertTag(sub_str.substring(1));
+                                insertNoteTag(getTagId(sub_str.substring(1)));
+                            }
+                        }
+                    })
+                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            alertDialogBuilder.show();
+        }
+        @Override
+        public void updateDrawState(TextPaint ds)
+        {
+            super.updateDrawState(ds);
+            ds.setUnderlineText(true);
+            ds.setColor(Color.BLUE);
+        }
+    };
 }

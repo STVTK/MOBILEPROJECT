@@ -49,7 +49,6 @@ public class NotesByTagList extends AppCompatActivity implements View.OnTouchLis
 
         ListView list = (ListView) findViewById(R.id.All_NOTES_By_TAGS);
 
-        Toast.makeText(getApplicationContext(),String.valueOf(getTagId()) , Toast.LENGTH_LONG).show();
         Cursor cursor = db.rawQuery(selectQuery, null);
         cursorAdapter = new NotesCursorAdapter(this,cursor,0);
 

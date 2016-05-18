@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
@@ -25,8 +26,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +58,8 @@ public class EditorActivity extends ActionBarActivity {
     boolean pound_pressed;
     boolean back_pressed;
     int length = 0;
+
+    String sub_str,no_pound;
 
 
     @Override
@@ -352,7 +358,9 @@ public class EditorActivity extends ActionBarActivity {
                 int last_index = text.lastIndexOf('#');
                 if (last_index > 0)
                 {
-                    final String sub_str = text.substring(last_index, text.length() - 1); // this is your tag
+                    sub_str = text.substring(last_index, text.length() - 1);
+                    no_pound = sub_str.substring(1);
+                    // this is your tag
                     //The tag is oviously the substring from the last index of # minus the length
                     //example : this text is a #test . #test will be the substring since this is
                     //lunched only when space and pound are pressed in a row.
@@ -381,40 +389,46 @@ public class EditorActivity extends ActionBarActivity {
         @Override
         public void onClick(View widget)
         {
-            TextView textView = (TextView) widget;
-            final String sub_str = textView.getText().toString().substring(textView.getText().toString().lastIndexOf("#"));
-            final android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(EditorActivity.this);
-            alertDialogBuilder.setTitle("Add To:");
-            final EditText input = new EditText(EditorActivity.this);
-            input.setText(sub_str.substring(1));
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.MATCH_PARENT);
-            input.setLayoutParams(lp);
-            alertDialogBuilder.setView(input);
-            alertDialogBuilder
-                    .setCancelable(true)
-                    .setPositiveButton("Add", new DialogInterface.OnClickListener() {
-                        boolean is_Empty = false;
+            if(isValidDate(no_pound))
+            {
+                Date date = getDateFromTag(no_pound);
+                launchAdding_Calendar(date);
+            } else {
+                TextView textView = (TextView) widget;
+                sub_str = textView.getText().toString().substring(textView.getText().toString().lastIndexOf("#"));
+                final android.support.v7.app.AlertDialog.Builder alertDialogBuilder = new android.support.v7.app.AlertDialog.Builder(EditorActivity.this);
+                alertDialogBuilder.setTitle("Add To:");
+                final EditText input = new EditText(EditorActivity.this);
+                input.setText(sub_str.substring(1));
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.MATCH_PARENT);
+                input.setLayoutParams(lp);
+                alertDialogBuilder.setView(input);
+                alertDialogBuilder
+                        .setCancelable(true)
+                        .setPositiveButton("Add", new DialogInterface.OnClickListener() {
+                            boolean is_Empty = false;
 
-                        public void onClick(DialogInterface dialog, int id) {
-                            String url = input.getText().toString().trim();
-                            if (url.equals("")) {
+                            public void onClick(DialogInterface dialog, int id) {
+                                String url = input.getText().toString().trim();
+                                if (url.equals("")) {
+                                    dialog.cancel();
+                                    is_Empty = true;
+                                }
+                                if (!is_Empty) {
+                                    insertTag(url);
+                                    insertNoteTag(getTagId(url));
+                                }
+                            }
+                        })
+                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
-                                is_Empty = true;
                             }
-                            if (!is_Empty) {
-                                insertTag(sub_str.substring(1));
-                                insertNoteTag(getTagId(sub_str.substring(1)));
-                            }
-                        }
-                    })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
-            alertDialogBuilder.show();
+                        });
+                alertDialogBuilder.show();
+            }
         }
         @Override
         public void updateDrawState(TextPaint ds)
@@ -424,4 +438,51 @@ public class EditorActivity extends ActionBarActivity {
             ds.setColor(Color.BLUE);
         }
     };
+    public boolean isValidDate(String input)
+    {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setLenient(false);
+        try
+        {
+            format.parse(input);
+            return true;
+        }
+        catch(ParseException pe)
+        {
+            Log.e("Error",pe.toString());
+            return false;
+        }
+    }
+    public Date getDateFromTag(String input)
+    {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        format.setLenient(false);
+        try
+        {
+            return format.parse(input);
+
+        }
+        catch(Exception ex)
+        {
+            Log.e("Error", ex.toString());
+            return null;
+        }
+    }
+    public void launchAdding_Calendar(Date date)
+    {
+        if(date==null)
+            Toast.makeText(getApplicationContext(),"Something went Wrong",Toast.LENGTH_LONG).show();
+        else
+        {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            Intent intent = new Intent(Intent.ACTION_INSERT)
+                    .setData(CalendarContract.Events.CONTENT_URI)
+                    .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, cal.getTimeInMillis())
+                    .putExtra(CalendarContract.Events.TITLE, Title.getText())
+                    .putExtra(CalendarContract.Events.DESCRIPTION, editor.getText());
+            startActivity(intent);
+
+        }
+    }
 }

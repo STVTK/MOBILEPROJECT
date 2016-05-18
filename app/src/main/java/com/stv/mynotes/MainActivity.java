@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -42,7 +43,6 @@ implements LoaderManager.LoaderCallbacks<Cursor>, SearchView.OnQueryTextListener
             Toast.makeText(MainActivity.this, text,
                     Toast.LENGTH_SHORT).show();
         }
-
     }
     private void LoadDefaultView(){
         baseContext = getBaseContext();

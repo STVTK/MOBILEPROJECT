@@ -25,5 +25,4 @@
         android:icon="@mipmap/hash_tag_icon"
         android:orderInCategory="102"
         app:showAsAction="always" />
-
 </menu>
